@@ -5,33 +5,24 @@ import {
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import type { IReadonlyTheme } from '@microsoft/sp-component-base';
-//import { escape } from '@microsoft/sp-lodash-subset';
-
-import styles from './AppFeedbackWebPart.module.scss';
 import * as strings from 'AppFeedbackWebPartStrings';
 import type { IAppFeedbackWebPartProps } from './IAppFeedbackWebPartProps';
 import { getEnvironmentMessage } from './AppFeedbackUtils';
-import { getAppFeedbackHtml } from './AppFeedbackRenderUtils';
+import { getPortalHtml } from './AppFeedbackRenderUtils';
+import { initializePortalJS } from './AppFeedbackUtils';
+import styles from './AppFeedbackWebPart.module.scss';
 
 export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedbackWebPartProps> {
 
-  // Indica si el tema actual es oscuro
-  private _isDarkTheme: boolean = false;
-  // Almacena el mensaje del entorno (Teams, SharePoint, etc.)
-  private _environmentMessage: string = '';
+  
 
   /**
    * Renderiza el contenido HTML del WebPart en el DOM.
    * Llama a la función auxiliar getAppFeedbackHtml para obtener el HTML y lo asigna al elemento raíz.
    */
   public render(): void {
-    this.domElement.innerHTML = getAppFeedbackHtml({
-      isDarkTheme: this._isDarkTheme,
-      environmentMessage: this._environmentMessage,
-      userDisplayName: this.context.pageContext.user.displayName,
-      description: this.properties.description,
-      styles
-    });
+    this.domElement.innerHTML = getPortalHtml(this.context.pageContext.user.displayName);
+    initializePortalJS(this.domElement, styles); // Pasa el objeto styles aquí
   }
 
   /**
@@ -41,7 +32,7 @@ export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedba
    */
   protected onInit(): Promise<void> {
     return getEnvironmentMessage(this.context, strings).then(message => {
-      this._environmentMessage = message;
+      
       this.render(); // Asegura que el mensaje se muestre después de obtenerlo
     });
   }
@@ -56,7 +47,7 @@ export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedba
       return;
     }
 
-    this._isDarkTheme = !!currentTheme.isInverted;
+   
     const {
       semanticColors
     } = currentTheme;
