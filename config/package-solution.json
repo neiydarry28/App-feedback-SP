@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "app-feedback-client-side-solution",
+    "id": "e2eb0db1-b142-4635-819b-8096d39caa4a",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "App-feedback description"
+      },
+      "longDescription": {
+        "default": "App-feedback description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "app-feedback Feature",
+        "description": "The feature that activates elements of the app-feedback solution.",
+        "id": "2c763b61-c2a7-4f0a-822a-4a3c8c37810f",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/app-feedback.sppkg"
+  }
+}
