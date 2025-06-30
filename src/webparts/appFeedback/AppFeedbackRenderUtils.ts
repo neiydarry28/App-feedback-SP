@@ -27,7 +27,13 @@ export function getAppFeedbackHtml(params: {
  * Devuelve el HTML completo del portal de retroalimentación.
  * Todas las clases relevantes usan styles['nombre-con-guion'] para compatibilidad con módulos de estilos.
  */
-export function getPortalHtml(userDisplayName: string): string {
+export function getPortalHtml(props: {
+  userDisplayName: string;
+  heroTitle: string;
+  heroDescription: string;
+  heroButtonText: string;
+  // ...otras props si necesitas...
+}): string {
   return `
     <div class="${styles['portal-container']}">
       <header class="${styles['portal-header']}">
@@ -44,10 +50,10 @@ export function getPortalHtml(userDisplayName: string): string {
       <main class="${styles['portal-main']}">
         <section id="inicio" class="${styles['portal-section']} ${styles['active']}">
           <div class="${styles['hero-section']}">
-            <h2>Bienvenido al Portal de Retroalimentación</h2>
-            <p>Tu voz es importante para nosotros. Este es el espacio centralizado para compartir tus ideas, sugerencias y preocupaciones. Juntos, construimos una mejor organización.</p>
+            <h2>${props.heroTitle}</h2>
+            <p>${props.heroDescription}</p>
             <div class="quick-access">
-              <a href="#enviar" class="${styles['btn']} ${styles['btn-primary']}">Enviar un nuevo comentario</a>
+              <a href="#enviar" class="${styles['btn']} ${styles['btn-primary']}">${props.heroButtonText}</a>
             
             </div>
           </div>
@@ -55,29 +61,14 @@ export function getPortalHtml(userDisplayName: string): string {
         <section id="enviar" class="${styles['portal-section']}">
           <h2>Enviar un Nuevo Comentario</h2>
           <form class="${styles['feedback-form']}">
-            <div class="${styles['form-group']}">
-              <label for="feedback-type">Tipo de Retroalimentación</label>
-              <select id="feedback-type" name="feedback-type">
-                <option value="positivo">Positivo</option>
-                <option value="mejora">Oportunidad de Mejora</option>
-                <option value="idea">Idea Innovadora</option>
-              </select>
-            </div>
-            <div class="${styles['form-group']}">
-              <label for="feedback-area">Área o Departamento</label>
-              <input type="text" id="feedback-area" name="feedback-area" placeholder="Ej: Recursos Humanos, TI, etc.">
-            </div>
+           
+           
             <div class="${styles['form-group']}">
               <label for="feedback-details">Descripción Detallada</label>
               <textarea id="feedback-details" name="feedback-details" rows="5" required></textarea>
             </div>
-            <div class="${styles['form-group']}">
-              <label for="attachment">Adjuntar Archivo (Opcional)</label>
-              <input type="file" id="attachment" name="attachment">
-            </div>
-            <div class="${styles['form-group']} ${styles['gamification']}">
-              <p>¡Gracias por tu contribución! Cada comentario te acerca a nuestra próxima insignia de "Colaborador Estrella".</p>
-            </div>
+            
+            
             <button type="submit" class="${styles['btn']} ${styles['btn-primary']}">Enviar Retroalimentación</button>
           </form>
         </section>
@@ -105,4 +96,44 @@ export function getPortalHtml(userDisplayName: string): string {
       </main>
     </div>
   `;
+}
+
+/**
+ * Inicializa la lógica de JavaScript para el portal de retroalimentación.
+ */
+export function initializePortalJS(domElement: HTMLElement, styles: { [key: string]: string }, listName: string, context: any): void {
+  // Manejo del formulario de feedback
+  const feedbackForm = domElement.querySelector('.' + styles['feedback-form']) as HTMLFormElement;
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const details = (feedbackForm.querySelector('#feedback-details') as HTMLTextAreaElement)?.value;
+
+      if (!details) {
+        alert('Por favor, ingresa tu comentario.');
+        return;
+      }
+
+      try {
+        await context.spHttpClient.post(
+          `${context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items`,
+          {
+            headers: {
+              'Accept': 'application/json;odata=nometadata',
+              'Content-type': 'application/json;odata=verbose',
+              'odata-version': ''
+            },
+            body: JSON.stringify({
+              'feedback-details': details // Nombre interno del campo en la lista
+            })
+          }
+        );
+        alert('¡Comentario enviado exitosamente!');
+        feedbackForm.reset();
+      } catch (error) {
+        alert('Error al guardar el comentario en SharePoint.');
+        console.error(error);
+      }
+    });
+  }
 }

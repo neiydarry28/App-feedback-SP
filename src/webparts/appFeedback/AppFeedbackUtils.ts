@@ -1,10 +1,12 @@
+import { SPHttpClient } from '@microsoft/sp-http';
+
 /**
  * Inicializa la lógica JS del portal de retroalimentación.
  * Debe llamarse después de renderizar el HTML.
  * @param domElement El elemento raíz del WebPart (this.domElement)
  * @param styles El objeto de estilos importado del módulo SCSS
  */
-export function initializePortalJS(domElement: HTMLElement, styles: { [key: string]: string }): void {
+export function initializePortalJS(domElement: HTMLElement, styles: { [key: string]: string }, listName: string, context: any): void {
   // Utiliza los nombres de clase generados por el módulo de estilos
   const navLinks = domElement.querySelectorAll('.' + styles['nav-link'] + ', .quick-access .' + styles['btn']);
   const sections = domElement.querySelectorAll('.' + styles['portal-section']);
@@ -129,6 +131,50 @@ export function initializePortalJS(domElement: HTMLElement, styles: { [key: stri
     }
   };
   document.head.appendChild(chartScript);
+
+  // Manejo del formulario de feedback
+  const feedbackForm = domElement.querySelector('.' + styles['feedback-form']) as HTMLFormElement;
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const details = (feedbackForm.querySelector('#feedback-details') as HTMLTextAreaElement)?.value;
+
+      if (!details) {
+        alert('Por favor, ingresa tu comentario.');
+        return;
+      }
+
+      try {
+        const response = await context.spHttpClient.post(
+          `${context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items`,
+          SPHttpClient.configurations.v1,
+          {
+            headers: {
+              'Accept': 'application/json;odata=verbose',
+              'Content-type': 'application/json;odata=verbose',
+              'odata-version': ''
+            },
+            body: JSON.stringify({
+              __metadata: { type: "SP.Data.FeedbackApplicationListItem" },
+              'FeedbackDetails': details
+            })
+          }
+        );
+
+        if (response.ok) {
+          alert('¡Comentario enviado exitosamente!');
+          feedbackForm.reset();
+        } else {
+          const errorText = await response.text();
+          alert('Error al guardar el comentario en SharePoint.');
+          console.error('Error HTTP:', response.status, errorText);
+        }
+      } catch (error) {
+        alert('Error al guardar el comentario en SharePoint.');
+        console.error(error);
+      }
+    });
+  }
 }
 
 export async function getEnvironmentMessage(context: any, strings: any): Promise<string> {

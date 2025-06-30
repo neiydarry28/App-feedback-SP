@@ -11,6 +11,7 @@ import { getEnvironmentMessage } from './AppFeedbackUtils';
 import { getPortalHtml } from './AppFeedbackRenderUtils';
 import { initializePortalJS } from './AppFeedbackUtils';
 import styles from './AppFeedbackWebPart.module.scss';
+//import { SPHttpClient } from '@microsoft/sp-http';
 
 export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedbackWebPartProps> {
 
@@ -21,8 +22,19 @@ export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedba
    * Llama a la función auxiliar getAppFeedbackHtml para obtener el HTML y lo asigna al elemento raíz.
    */
   public render(): void {
-    this.domElement.innerHTML = getPortalHtml(this.context.pageContext.user.displayName);
-    initializePortalJS(this.domElement, styles); // Pasa el objeto styles aquí
+    this.domElement.innerHTML = getPortalHtml({
+      userDisplayName: this.context.pageContext.user.displayName,
+      heroTitle: this.properties.heroTitle,
+      heroDescription: this.properties.heroDescription,
+      heroButtonText: this.properties.heroButtonText,
+      // ...otras props...
+    });
+    initializePortalJS(
+      this.domElement,
+      styles,
+      this.properties.feedbackListName,
+      this.context
+    );
   }
 
   /**
@@ -77,16 +89,16 @@ export default class AppFeedbackWebPart extends BaseClientSideWebPart<IAppFeedba
     return {
       pages: [
         {
-          header: {
-            description: strings.PropertyPaneDescription
-          },
+          header: { description: strings.PropertyPaneDescription },
           groups: [
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
-                })
+                PropertyPaneTextField('heroTitle', { label: 'Título del Hero' }),
+                PropertyPaneTextField('heroDescription', { label: 'Descripción del Hero' }),
+                PropertyPaneTextField('heroButtonText', { label: 'Texto del Botón' }),
+                // ...otros campos...
+                PropertyPaneTextField('feedbackListName', { label: 'Nombre de la lista de SharePoint' })
               ]
             }
           ]

@@ -1,3 +1,6 @@
 export interface IAppFeedbackWebPartProps {
-  description: string;
+  heroTitle: string;
+  heroDescription: string;
+  heroButtonText: string;
+  feedbackListName: string; // <-- Nueva propiedad
 }
