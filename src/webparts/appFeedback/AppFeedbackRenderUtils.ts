@@ -37,12 +37,12 @@ export function getPortalHtml(userDisplayName: string): string {
           <a href="#enviar" class="${styles['nav-link']}">Enviar Comentario</a>
           <a href="#consultar" class="${styles['nav-link']}">Consultar Comentarios</a>
           <a href="#dashboard" class="${styles['nav-link']}">Dashboard</a>
-          <a href="#contacto" class="${styles['nav-link']}">Contacto</a>
+         
         </nav>
        
       </header>
       <main class="${styles['portal-main']}">
-        <section id="inicio" class="${styles['portal-section']} active">
+        <section id="inicio" class="${styles['portal-section']} ${styles['active']}">
           <div class="${styles['hero-section']}">
             <h2>Bienvenido al Portal de Retroalimentación</h2>
             <p>Tu voz es importante para nosotros. Este es el espacio centralizado para compartir tus ideas, sugerencias y preocupaciones. Juntos, construimos una mejor organización.</p>
@@ -98,18 +98,10 @@ export function getPortalHtml(userDisplayName: string): string {
               <h3>Comentarios por Categoría</h3>
               <canvas id="categoryChart"></canvas>
             </div>
-            <div class="${styles['powerbi-container']}">
-              <h3>Análisis General (Power BI)</h3>
-              <iframe title="Reporte de Retroalimentacion" width="100%" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=[TU_REPORT_ID]&autoAuth=true&ctid=[TU_TENANT_ID]" frameborder="0" allowFullScreen="true"></iframe>
-            </div>
+          
           </div>
         </section>
-        <section id="contacto" class="${styles['portal-section']}">
-          <h2>Contacto y Soporte</h2>
-          <p>Si tienes alguna pregunta sobre el uso del portal o el proceso de retroalimentación, no dudes en contactarnos.</p>
-          <p><strong>Email:</strong> <a href="mailto:soporte@tuorganizacion.com">soporte@tuorganizacion.com</a></p>
-          <p><strong>Teléfono:</strong> +123 456 7890</p>
-        </section>
+       
       </main>
     </div>
   `;
