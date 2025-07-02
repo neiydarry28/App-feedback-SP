@@ -1,7 +1,11 @@
 declare interface IAppFeedbackWebPartStrings {
   PropertyPaneDescription: string;
   BasicGroupName: string;
-  DescriptionFieldLabel: string;
+  HeroTitleLabel: string;
+  HeroDescriptionLabel: string;
+  HeroButtonTextLabel: string;
+  FeedbackListNameLabel: string;
+  AnalystGroupNameLabel: string;
   AppLocalEnvironmentSharePoint: string;
   AppLocalEnvironmentTeams: string;
   AppLocalEnvironmentOffice: string;

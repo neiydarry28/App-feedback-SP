@@ -1,0 +1,33 @@
+define([], function() {
+  return {
+    "HeroTitle": "¡Bienvenido al evento!",
+    "HeroDescription": "Comparte tus comentarios abajo.",
+    "SendButton": "Enviar Retroalimentación",
+    "ConsultComments": "Consultar Comentarios",
+    "Dashboard": "Dashboard",
+    "Inicio": "Inicio",
+    "EnviarComentario": "Enviar Comentario",
+    "FeedbackFormTitle": "Enviar un Nuevo Comentario",
+    "FeedbackPlaceholder": "Escribe tu comentario aquí...",
+    "FeedbackSuccess": "¡Comentario enviado exitosamente!",
+    "FeedbackError": "Error al guardar el comentario en SharePoint.",
+    "DashboardTitle": "Dashboard Interactivo",
+    "FilterAll": "Todos",
+    "FilterPositive": "Positivo",
+    "FilterNegative": "Negativo",
+    "FilterNeutral": "Neutral",
+    "Recent": "Recientes",
+    "Oldest": "Antiguos",
+    "ChartDescSentiment": "Visualiza la proporción de comentarios positivos, negativos y neutrales recibidos. Este gráfico te ayuda a identificar rápidamente el clima general de la audiencia respecto a tus productos o servicios.",
+    "ChartDescMonthly": "Observa cómo varía la cantidad de comentarios de cada tipo de sentimiento a lo largo de los meses. Útil para detectar tendencias, evaluar el impacto de campañas y anticipar cambios en la percepción del público.",
+    "ChartDescVolume": "Consulta el volumen total de comentarios recibidos por mes. Este gráfico permite identificar picos de participación y relacionarlos con eventos, lanzamientos o acciones específicas.",
+    "ChartDescKeyphrases": "Descubre cuáles son las palabras clave más mencionadas por la audiencia en sus comentarios. Así puedes identificar los temas, productos o conceptos que generan mayor interés o preocupación.",
+    "HeroTitleLabel": "Título del Hero",
+    "HeroDescriptionLabel": "Descripción del Hero",
+    "HeroButtonTextLabel": "Texto del Botón",
+    "FeedbackListNameLabel": "Nombre de la lista de SharePoint",
+    "AnalystGroupNameLabel": "Nombre del grupo de analistas",
+    "PropertyPaneDescription": "Configura tu web part de retroalimentación",
+    "BasicGroupName": "Configuración general"
+  }
+});

@@ -185,10 +185,25 @@ body {
     border-radius: 4px;
 }
 
+.filter-all {
+  background-color: #0078d4; // azul
+  color: #fff;
+}
+.filter-positive {
+  background-color: #28a745; // verde
+  color: #fff;
+}
+.filter-negative {
+  background-color: #dc3545; // rojo
+  color: #fff;
+}
+.filter-neutral {
+  background-color: #ffc107; // amarillo
+  color: #333;
+}
 .filter-btn.active {
-    background-color: var(--primary-color);
-    color: #fff;
-    border-color: var(--primary-color);
+  border: 2px solid #222;
+  box-shadow: 0 0 4px #222;
 }
 
 .feedback-list .feedback-item {
@@ -214,8 +229,8 @@ body {
 .status.cerrado { background-color: var(--danger-color); }
 
 .dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 2rem;
 }
 
@@ -223,6 +238,26 @@ body {
     padding: 1.5rem;
     background-color: var(--secondary-color);
     border-radius: 8px;
+    min-height: 320px;
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#categoryChart, #barSentimentChart, #lineVolumeChart {
+  width: 100% !important;
+  height: 300px !important;
+  max-width: 100%;
+}
+
+.chart-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 @media (max-width: 992px) {
@@ -303,3 +338,21 @@ body {
     }
   }
 }
+
+.feedback-count {
+  font-size: 1rem;
+  color: #0078d4;
+  margin-left: 8px;
+}
+
+.filter-sort {
+  background-color: #e1e1e1;
+  color: #333;
+  font-size: 1rem;
+  margin-left: 8px;
+}
+.filter-sort.active {
+  background-color: #0078d4;
+  color: #fff;
+}
+

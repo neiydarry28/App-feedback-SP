@@ -11,7 +11,9 @@
       ]
     }
   },
-  "externals": {},
+  "externals": {
+    "Chart": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+  },
   "localizedResources": {
     "AppFeedbackWebPartStrings": "lib/webparts/appFeedback/loc/{locale}.js"
   }

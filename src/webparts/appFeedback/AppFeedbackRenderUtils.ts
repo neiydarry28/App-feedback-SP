@@ -1,6 +1,7 @@
 import { escape } from '@microsoft/sp-lodash-subset';
 import styles from './AppFeedbackWebPart.module.scss';
 
+
 export function getAppFeedbackHtml(params: {
   isDarkTheme: boolean,
   environmentMessage: string,
@@ -32,20 +33,21 @@ export function getPortalHtml(props: {
   heroTitle: string;
   heroDescription: string;
   heroButtonText: string;
-  // ...otras props si necesitas...
+  isAnalyst: boolean;
+  strings: any;
 }): string {
+  const s = props.strings;
   return `
     <div class="${styles['portal-container']}">
       <header class="${styles['portal-header']}">
-      
         <nav class="${styles['main-nav']}">
-          <a href="#inicio" class="${styles['nav-link']} active">Inicio</a>
-          <a href="#enviar" class="${styles['nav-link']}">Enviar Comentario</a>
-          <a href="#consultar" class="${styles['nav-link']}">Consultar Comentarios</a>
-          <a href="#dashboard" class="${styles['nav-link']}">Dashboard</a>
-         
+          <a href="#inicio" class="${styles['nav-link']} active">${s.Inicio}</a>
+          <a href="#enviar" class="${styles['nav-link']}">${s.EnviarComentario}</a>
+          ${props.isAnalyst ? `
+            <a href="#consultar" class="${styles['nav-link']}">${s.ConsultComments}</a>
+            <a href="#dashboard" class="${styles['nav-link']}">${s.Dashboard}</a>
+          ` : ''}
         </nav>
-       
       </header>
       <main class="${styles['portal-main']}">
         <section id="inicio" class="${styles['portal-section']} ${styles['active']}">
@@ -54,86 +56,58 @@ export function getPortalHtml(props: {
             <p>${props.heroDescription}</p>
             <div class="quick-access">
               <a href="#enviar" class="${styles['btn']} ${styles['btn-primary']}">${props.heroButtonText}</a>
-            
             </div>
           </div>
         </section>
         <section id="enviar" class="${styles['portal-section']}">
-          <h2>Enviar un Nuevo Comentario</h2>
+          <h2>${s.FeedbackFormTitle}</h2>
           <form class="${styles['feedback-form']}">
-           
-           
             <div class="${styles['form-group']}">
-              <label for="feedback-details">Descripción Detallada</label>
-              <textarea id="feedback-details" name="feedback-details" rows="5" required></textarea>
+              <textarea id="feedback-details" name="feedback-details" rows="5" required placeholder="${s.FeedbackPlaceholder}"></textarea>
             </div>
-            
-            
-            <button type="submit" class="${styles['btn']} ${styles['btn-primary']}">Enviar Retroalimentación</button>
+            <button type="submit" class="${styles['btn']} ${styles['btn-primary']}">${s.SendButton}</button>
           </form>
         </section>
+        ${props.isAnalyst ? `
         <section id="consultar" class="${styles['portal-section']}">
-          <h2>Consultar Comentarios</h2>
+          <h2>${s.ConsultComments} <span id="feedback-count" class="${styles['feedback-count']}">(0)</span></h2>
           <div class="${styles['filter-tabs']}">
-            <button class="${styles['filter-btn']} active" data-filter="all">Todos</button>
-            <button class="${styles['filter-btn']}" data-filter="positivo">Positivos</button>
-            <button class="${styles['filter-btn']}" data-filter="revision">Pendientes de Revisión</button>
-            <button class="${styles['filter-btn']}" data-filter="cerrado">Histórico Cerrado</button>
+            <button class="${styles['filter-btn']} ${styles['filter-all']} active" data-filter="all">${s.FilterAll}</button>
+            <button class="${styles['filter-btn']} ${styles['filter-positive']}" data-filter="positive">${s.FilterPositive}</button>
+            <button class="${styles['filter-btn']} ${styles['filter-negative']}" data-filter="negative">${s.FilterNegative}</button>
+            <button class="${styles['filter-btn']} ${styles['filter-neutral']}" data-filter="neutral">${s.FilterNeutral}</button>
+            <button class="${styles['filter-btn']} ${styles['filter-sort']}" data-sort="desc" title="${s.Recent}">&#8595; ${s.Recent}</button>
+            <button class="${styles['filter-btn']} ${styles['filter-sort']}" data-sort="asc" title="${s.Oldest}">&#8593; ${s.Oldest}</button>
           </div>
           <div class="${styles['feedback-list']}"></div>
         </section>
         <section id="dashboard" class="${styles['portal-section']}">
-          <h2>Dashboard Interactivo</h2>
+          <h2>${s.DashboardTitle}</h2>
           <div class="${styles['dashboard-container']}">
             <div class="${styles['chart-container']}">
-              <h3>Comentarios por Categoría</h3>
+              <div class="chart-description">${s.ChartDescSentiment}</div>
+              <div class="chart-title">${s.DistribucionSentimientos || 'Distribución de Sentimientos'}</div>
               <canvas id="categoryChart"></canvas>
             </div>
-          
+            <div class="${styles['chart-container']}">
+              <div class="chart-description">${s.ChartDescMonthly}</div>
+              <div class="chart-title">${s.EvolucionMensual || 'Evolución Mensual por Sentimiento'}</div>
+              <canvas id="barSentimentChart"></canvas>
+            </div>
+            <div class="${styles['chart-container']}">
+              <div class="chart-description">${s.ChartDescVolume}</div>
+              <div class="chart-title">${s.VolumenTotal || 'Volumen Total de Comentarios'}</div>
+              <canvas id="lineVolumeChart"></canvas>
+            </div>
+            <div class="${styles['chart-container']}">
+              <div class="chart-description">${s.ChartDescKeyphrases}</div>
+              <div class="chart-title">${s.FrecuenciaKeyphrases || 'Frecuencia de Palabras Clave'}</div>
+              <canvas id="keyphrasesBarChart"></canvas>
+            </div>
           </div>
         </section>
-       
+        ` : ''}
       </main>
     </div>
   `;
-}
-
-/**
- * Inicializa la lógica de JavaScript para el portal de retroalimentación.
- */
-export function initializePortalJS(domElement: HTMLElement, styles: { [key: string]: string }, listName: string, context: any): void {
-  // Manejo del formulario de feedback
-  const feedbackForm = domElement.querySelector('.' + styles['feedback-form']) as HTMLFormElement;
-  if (feedbackForm) {
-    feedbackForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const details = (feedbackForm.querySelector('#feedback-details') as HTMLTextAreaElement)?.value;
-
-      if (!details) {
-        alert('Por favor, ingresa tu comentario.');
-        return;
-      }
-
-      try {
-        await context.spHttpClient.post(
-          `${context.pageContext.web.absoluteUrl}/_api/web/lists/getbytitle('${listName}')/items`,
-          {
-            headers: {
-              'Accept': 'application/json;odata=nometadata',
-              'Content-type': 'application/json;odata=verbose',
-              'odata-version': ''
-            },
-            body: JSON.stringify({
-              'feedback-details': details // Nombre interno del campo en la lista
-            })
-          }
-        );
-        alert('¡Comentario enviado exitosamente!');
-        feedbackForm.reset();
-      } catch (error) {
-        alert('Error al guardar el comentario en SharePoint.');
-        console.error(error);
-      }
-    });
-  }
 }

@@ -35,6 +35,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/app-feedback.sppkg"
+    "zippedPackage": "solution/app-feedback-v1.sppkg"
   }
 }
